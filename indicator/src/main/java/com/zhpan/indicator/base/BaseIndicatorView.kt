@@ -22,6 +22,7 @@ open class BaseIndicatorView @JvmOverloads constructor(context: Context, attrs: 
     var mIndicatorOptions: IndicatorOptions
 
     private var mViewPager: ViewPager? = null
+    private var mSize:Int = 0
 
     var pageSize: Int
         get() = mIndicatorOptions.pageSize
@@ -64,7 +65,7 @@ open class BaseIndicatorView @JvmOverloads constructor(context: Context, attrs: 
     }
 
     override fun onPageSelected(position: Int) {
-        pageSelected(position)
+        pageSelected(position%mSize)
     }
 
     private fun pageSelected(position: Int) {
@@ -76,7 +77,7 @@ open class BaseIndicatorView @JvmOverloads constructor(context: Context, attrs: 
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        pageScrolled(position, positionOffset, positionOffsetPixels);
+        pageScrolled(position%mSize, positionOffset, positionOffsetPixels);
     }
 
     private fun pageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -118,7 +119,7 @@ open class BaseIndicatorView @JvmOverloads constructor(context: Context, attrs: 
             mViewPager!!.removeOnPageChangeListener(this)
             mViewPager!!.addOnPageChangeListener(this)
             if (mViewPager!!.adapter != null)
-                pageSize = mViewPager!!.adapter!!.count
+                pageSize = mSize
         }
     }
 
@@ -161,7 +162,11 @@ open class BaseIndicatorView @JvmOverloads constructor(context: Context, attrs: 
         mViewPager = viewPager
         notifyDataChanged()
     }
-
+    fun setupWithViewPager(viewPager: ViewPager,size:Int) {
+        mViewPager = viewPager
+        mSize = size
+        notifyDataChanged()
+    }
     fun getIndicatorOptions(): IndicatorOptions? {
         return mIndicatorOptions
     }
